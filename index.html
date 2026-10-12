@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>DOM Agenda · Ministério de Mídia IBNB</title>
+<meta name="theme-color" content="#0a2a6b">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230a2a6b'/%3E%3Ctext x='32' y='42' font-family='Arial' font-weight='900' font-size='26' text-anchor='middle' fill='%233b9bff'%3EDOM%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<!-- Tela de login -->
+<section class="auth" id="auth" hidden>
+  <div class="auth-card">
+    <div class="brand auth-brand"><span class="dom">DOM</span><span class="sub">AGENDA</span></div>
+    <p class="auth-sub">Ministério de Mídia · IBNB</p>
+    <div class="seg" id="auth-tabs" role="tablist">
+      <button type="button" data-tab="login" aria-pressed="true">Entrar</button>
+      <button type="button" data-tab="signup" aria-pressed="false">Criar conta</button>
+    </div>
+    <form class="form" id="auth-form">
+      <label class="f" for="auth-name" id="auth-name-wrap" hidden>Seu nome<input id="auth-name" type="text" maxlength="60" autocomplete="name"></label>
+      <label class="f" for="auth-email">E-mail<input id="auth-email" type="email" required autocomplete="email"></label>
+      <label class="f" for="auth-pass">Senha<input id="auth-pass" type="password" required minlength="6" autocomplete="current-password"></label>
+      <button class="btn" type="submit" id="auth-submit">Entrar</button>
+      <button class="link" type="button" id="auth-forgot">Esqueci minha senha</button>
+    </form>
+    <div id="auth-google-wrap" hidden>
+      <div class="or"><span>ou</span></div>
+      <button class="btn ghost" type="button" id="auth-google" style="width:100%;justify-content:center">Entrar com Google</button>
+    </div>
+    <p class="auth-msg" id="auth-msg" role="status"></p>
+  </div>
+</section>
+
+<!-- Nova senha (link de recuperação) -->
+<section class="auth" id="recover" hidden>
+  <div class="auth-card">
+    <h2>Definir nova senha</h2>
+    <form class="form" id="recover-form">
+      <label class="f" for="recover-pass">Nova senha<input id="recover-pass" type="password" required minlength="6" autocomplete="new-password"></label>
+      <button class="btn" type="submit">Salvar senha</button>
+    </form>
+    <p class="auth-msg" id="recover-msg" role="status"></p>
+  </div>
+</section>
+
+<div class="app" id="app" hidden>
+  <aside class="side">
+    <div class="brand"><span class="dom">DOM</span><span class="sub">AGENDA</span></div>
+    <nav class="nav" id="nav"></nav>
+    <div class="ministry">
+      <svg width="46" height="52" viewBox="0 0 46 52" aria-hidden="true"><path d="M23 2c-6 9-8 18-4 27-7-4-12-10-14-18-2 13 4 26 18 31 9-3 15-10 17-19-5 4-10 6-16 6 6-8 5-18-1-27z" fill="#5aa8ff"/><path d="M23 42c-3 3-4 6-3 9 4-2 6-5 6-9z" fill="#9cc8ff"/></svg>
+      <b>Ministério de Mídia</b><small>IBNB</small>
+    </div>
+  </aside>
+  <main class="main" id="main"></main>
+</div>
+<nav class="bottom" id="bottom" hidden></nav>
+<div class="toast" id="toast" hidden></div>
+<div class="setup" id="setup" hidden>
+  <div class="auth-card"><h2>Falta configurar o Supabase</h2><p>Abra o arquivo <code>config.js</code> e preencha <code>SUPABASE_URL</code> e <code>SUPABASE_ANON_KEY</code> com os dados do seu projeto (veja o README).</p></div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.57.4/dist/umd/supabase.js"></script>
+<script src="config.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
