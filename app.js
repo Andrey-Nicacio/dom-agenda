@@ -181,7 +181,7 @@ function topbar(){
  const m=me();const name=(m&&m.name)||S.myName||"Visitante";
  const title=(NAV.find(n=>n.id===S.view)||NAV[0]).label;
  const av=S.myAvatar?`<img src="${esc(S.myAvatar)}" alt="">`:`<span class="av" style="background:${colorFor(S.uid||"x")};width:40px;height:40px">${esc(initials(name))}</span>`;
- return `<div class="top"><h2>${S.view==="inicio"?"":esc(title)}</h2><div class="who">${av}<div><b>${esc(name)}</b><small>${S.isOwner?"Coordenador":(m?"Membro":"Novo por aqui")}</small></div><button class="btn ghost" data-act="logout" style="padding:8px 12px">Sair</button></div></div>`;
+ return `<div class="top"><div class="row" style="gap:12px;min-width:0"><img class="top-logo" src="logo-dom-agenda.png" alt="DOM Agenda" width="600" height="227"><h2>${S.view==="inicio"?"":esc(title)}</h2></div><div class="who">${av}<div><b>${esc(name)}</b><small>${S.isOwner?"Coordenador":(m?"Membro":"Novo por aqui")}</small></div><button class="btn ghost" data-act="logout" style="padding:8px 12px">Sair</button></div></div>`;
 }
 function statusBanner(){
  if(S.dbState==="loading")return `<div class="card empty">Carregando dados do ministério…</div>`;
@@ -250,7 +250,7 @@ function vInicio(){
    <div class="card"><div class="card-h"><h3>${I.clock} Pendências</h3></div>
     ${pend.length?`<div class="list">${pend.slice(0,6).map(a=>`<div class="li"><button class="chk" data-act="confirm" data-k="${esc(a.ckey)}" aria-label="Confirmar presença"></button><div class="txt"><b>Confirmar presença · ${pad(a.d.getDate())}/${pad(a.d.getMonth()+1)}</b><small>${esc(a.name)} · ${esc(fnName(a.fn))}</small></div></div>`).join("")}</div>`:`<div class="empty">Tudo em dia. Quando você for escalado, a confirmação aparece aqui.</div>`}
    </div>
-   <div class="training"><small>LEMBRETE</small><b style="font-family:var(--f-display);font-size:20px">Agenda do próximo mês</b><span>Marque seus dias indisponíveis antes da escala de ${MONTHS[(t.getMonth()+1)%12]} ser gerada.</span><div><button class="btn" style="background:#fff;color:#0b3fb4;margin-top:6px" data-act="nav" data-id="agenda">Abrir minha agenda</button></div></div>
+   <div class="training"><small>LEMBRETE</small><b style="font-family:var(--f-display);font-size:20px">Agenda do próximo mês</b><span>Marque seus dias indisponíveis antes da escala de ${MONTHS[(t.getMonth()+1)%12]} ser gerada.</span><div><button class="btn" style="margin-top:6px" data-act="nav" data-id="agenda">Abrir minha agenda</button></div></div>
   </div>
  </div>`;
 }
