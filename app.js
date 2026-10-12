@@ -18,8 +18,8 @@ const NAV=[
  {id:"inicio",label:"Início",icon:I.home},
  {id:"agenda",label:"Minha Agenda",icon:I.cal},
  {id:"escalas",label:"Escalas",icon:I.grid},
- {id:"equipe",label:"Equipe",icon:I.users},
- {id:"comunicados",label:"Comunicados",icon:I.mega},
+ {id:"equipe",label:"Equipe",icon:I.users,owner:true},
+ {id:"comunicados",label:"Comunicados",icon:I.mega,owner:true},
  {id:"config",label:"Configurações",icon:I.gear,owner:true}
 ];
 /* ---------- defaults (app configuration, editable by the coordinator) ---------- */
@@ -163,7 +163,7 @@ function me(){return S.uid?S.members[S.uid]:null;}
 let pendingRender=false;
 function render(){
  pendingRender=false;
- if(S.view==="config"&&!S.isOwner){S.view="inicio";}
+ {const nv=NAV.find(n=>n.id===S.view);if(!nv||(nv.owner&&!S.isOwner))S.view="inicio";}
  document.getElementById("nav").innerHTML=navHtml(false);
  document.getElementById("bottom").innerHTML=navHtml(true);
  const v={inicio:vInicio,agenda:vAgenda,escalas:vEscalas,equipe:vEquipe,comunicados:vComunicados,config:vConfig}[S.view]||vInicio;
@@ -239,7 +239,7 @@ function vInicio(){
    <div class="card"><div class="card-h"><h3>${I.cal}<span>Minha semana<small>${pad(ws.getDate())}/${pad(ws.getMonth()+1)} – ${pad(we.getDate())}/${pad(we.getMonth()+1)} de ${we.getFullYear()}</small></span></h3>
     <div class="row"><button class="iconbtn" data-act="week" data-d="-7" aria-label="Semana anterior">${I.left}</button><button class="iconbtn" data-act="week" data-d="7" aria-label="Próxima semana">${I.right}</button><button class="btn ghost" data-act="nav" data-id="agenda">Marcar indisponibilidade</button></div></div>
     <div class="week">${week}</div></div>
-   <div class="card"><div class="card-h"><h3>${I.mega} Comunicados recentes</h3><button class="link" data-act="nav" data-id="comunicados">Ver todos</button></div>
+   <div class="card"><div class="card-h"><h3>${I.mega} Comunicados recentes</h3>${S.isOwner?`<button class="link" data-act="nav" data-id="comunicados">Ver todos</button>`:""}</div>
     ${coms.length?`<div class="list">${coms.map(c=>`<div class="li"><span class="dot" style="background:${c.tone==="urgente"?"var(--bad)":c.tone==="info"?"var(--accent)":"var(--ok)"}"></span><div class="txt"><b>${esc(c.title)}</b></div><small style="color:var(--muted)">${esc(ago(c.createdAt))}</small></div>`).join("")}</div>`:`<div class="empty">Nenhum comunicado ainda. ${S.isOwner?"Publique o primeiro na aba Comunicados.":""}</div>`}
    </div>
   </div>
@@ -290,8 +290,8 @@ function vAgenda(){
    ${escKey&&escKey.published?`<p class="badge t-warn" style="margin:0">A escala deste mês já foi publicada. Avise o coordenador se mudar algo.</p>`:""}
   </div></div>`;
  }
- return statusBanner()+`<div class="split"><div class="card"><div class="card-h"><h3>${I.cal}<span>${monthLabel(mo).replace(/^./,c=>c.toUpperCase())}<small>${S.isOwner&&target!==S.uid?"Editando a agenda de "+esc(memberName(target)):"Seus dias indisponíveis"}</small></span></h3>
-   <div class="row">${ownerPick}<button class="iconbtn" data-act="month" data-d="-1" aria-label="Mês anterior">${I.left}</button><button class="iconbtn" data-act="month" data-d="1" aria-label="Próximo mês">${I.right}</button></div></div>
+ return statusBanner()+selfForm()+`<div class="split"><div class="card"><div class="card-h"><h3>${I.cal}<span>${monthLabel(mo).replace(/^./,c=>c.toUpperCase())}<small>${S.isOwner&&target!==S.uid?"Editando a agenda de "+esc(memberName(target)):"Seus dias indisponíveis"}</small></span></h3>
+   <div class="row">${ownerPick}${me()&&!S.editSelf?`<button class="btn ghost" data-act="editSelf">Minhas funções</button>`:""}<button class="iconbtn" data-act="month" data-d="-1" aria-label="Mês anterior">${I.left}</button><button class="iconbtn" data-act="month" data-d="1" aria-label="Próximo mês">${I.right}</button></div></div>
    <div class="cal">${cells}</div>
    <div class="legend" style="margin-top:12px"><span><i class="sw" style="background:var(--bad-soft);border-color:var(--bad)"></i>Dia indisponível</span><span><i class="sw" style="background:var(--warn-soft);border-color:var(--warn)"></i>Culto indisponível</span><span><i class="sw" style="background:var(--accent)"></i>Você está escalado</span></div>
   </div>${panel}</div>`;
@@ -354,11 +354,12 @@ function vEquipe(){
    <div class="mini"><span><b>${cnt[x.id]||0}</b> escalas no mês</span><span><b>${un}</b> indisponibilidades</span></div>
    ${S.isOwner||x.id===S.uid?`<div class="row">${S.isOwner?`<button class="btn ghost" data-act="editMember" data-id="${esc(x.id)}">Editar</button><button class="btn ghost" data-act="agendaOf" data-id="${esc(x.id)}">Agenda</button>`:`<button class="btn ghost" data-act="editSelf">Minhas funções</button>`}</div>`:""}
   </div>`;}).join("");
- const self=S.editSelf&&me()?`<div class="card"><div class="card-h"><h3>Minhas funções</h3></div><form class="form" data-form="self"><label class="f" for="self-name">Nome<input id="self-name" type="text" required maxlength="60" value="${esc(me().name)}"></label><div class="chips" id="self-fns">${fns.map(f=>`<button type="button" class="chip" data-act="chipToggle" data-val="${esc(f.id)}" aria-pressed="${(me().functions||[]).includes(f.id)}">${esc(f.name)}</button>`).join("")}</div><div class="row"><button class="btn" type="submit">Salvar</button><button class="btn ghost" type="button" data-act="editSelf">Cancelar</button></div></form></div>`:"";
+ const self="";
  return statusBanner()+form+self+`<div class="card-h" style="margin:0"><h3>${I.users}<span>Equipe de mídia<small>${list.length} pessoa(s)</small></span></h3>${S.isOwner?`<button class="btn" data-act="editMember" data-id="new">Adicionar membro</button>`:""}</div>
  ${list.length?`<div class="members">${cards}</div>`:`<div class="card empty">Ninguém na equipe ainda. Os membros aparecem aqui quando criam a conta no portal${S.isOwner?" ou quando você os adiciona":""}.</div>`}`;
 }
 
+function selfForm(){const fns=cfg().functions;return S.editSelf&&me()?`<div class="card"><div class="card-h"><h3>Minhas funções</h3></div><form class="form" data-form="self"><label class="f" for="self-name">Nome<input id="self-name" type="text" required maxlength="60" value="${esc(me().name)}"></label><div class="chips" id="self-fns">${fns.map(f=>`<button type="button" class="chip" data-act="chipToggle" data-val="${esc(f.id)}" aria-pressed="${(me().functions||[]).includes(f.id)}">${esc(f.name)}</button>`).join("")}</div><div class="row"><button class="btn" type="submit">Salvar</button><button class="btn ghost" type="button" data-act="editSelf">Cancelar</button></div></form></div>`:"";}
 function vComunicados(){
  const form=S.isOwner?`<div class="card"><div class="card-h"><h3>${I.mega} Novo comunicado</h3></div><form class="form" data-form="com">
   <label class="f" for="com-title">Título<input id="com-title" type="text" required maxlength="90" placeholder="Ex.: Alteração na escala de domingo"></label>
