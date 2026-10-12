@@ -18,7 +18,7 @@ Você vai levar uns 20 minutos para colocar no ar. Não precisa instalar nada no
    - **Region:** `South America (São Paulo)`
 3. Espere 1 a 2 minutos até o projeto ficar pronto.
 4. No menu lateral, abra **SQL Editor** → **New query**.
-5. Abra o arquivo `supabase/schema.sql` deste projeto, copie **todo** o conteúdo, cole no editor e clique em **Run**. Deve aparecer `Success`.
+5. Abra o arquivo `schema.sql` deste projeto, copie **todo** o conteúdo, cole no editor e clique em **Run**. Deve aparecer `Success`.
 
 ## 2. Configurar o login
 
@@ -109,4 +109,4 @@ No Supabase, abra **Table Editor**, escolha a tabela e clique em **Export to CSV
 | `style.css` | Visual (cores, claro/escuro, celular) |
 | `app.js` | Lógica do portal e da escala automática |
 | `config.js` | Endereço e chave do seu Supabase |
-| `supabase/schema.sql` | Tabelas e regras de segurança do banco |
+| `schema.sql` | Tabelas e regras de segurança do banco |
